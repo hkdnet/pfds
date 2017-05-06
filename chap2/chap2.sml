@@ -8,6 +8,7 @@ sig
   val head : 'a Stack -> 'a
   val tail : 'a Stack -> 'a Stack
   val ++ : 'a Stack * 'a Stack -> 'a Stack
+  val update : 'a Stack * int * 'a -> 'a Stack
 end
 
 structure MyList: Stack =
@@ -20,6 +21,9 @@ struct
   fun head x = hd x
   fun tail x = tl x
   fun ++ (xs, ys) = if isEmpty xs then ys else cons(head xs, ++ (tail xs, ys))
+  fun update([], i, y) = raise Subscript
+    | update(x :: xs, 0, y) = y :: xs
+    | update(x :: xs, i, y) = update(xs, i - 1, y)
 end
 
 structure MyStack: Stack =
@@ -34,4 +38,7 @@ struct
   fun tail Nil = raise Empty
     | tail (CONS(x, xs)) = xs
   fun ++ (xs, ys) = if isEmpty xs then ys else cons(head xs, ++ (tail xs, ys))
+  fun update(Nil, i, y) = raise Subscript
+    | update(CONS(x, xs), 0, y) = CONS(y, xs)
+    | update(CONS(x, xs), i, y) = update(xs, i - 1, y)
 end
