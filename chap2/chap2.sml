@@ -7,6 +7,7 @@ sig
   val cons : 'a * 'a Stack -> 'a Stack
   val head : 'a Stack -> 'a
   val tail : 'a Stack -> 'a Stack
+  val ++ : 'a Stack * 'a Stack -> 'a Stack
 end
 
 structure MyList: Stack =
@@ -18,6 +19,7 @@ struct
   fun cons (x, xs) = x :: xs
   fun head x = hd x
   fun tail x = tl x
+  fun ++ (xs, ys) = if isEmpty xs then ys else cons(head xs, ++ (tail xs, ys))
 end
 
 structure MyStack: Stack =
@@ -31,4 +33,5 @@ struct
     | head (CONS(x, xs)) = x
   fun tail Nil = raise Empty
     | tail (CONS(x, xs)) = xs
+  fun ++ (xs, ys) = if isEmpty xs then ys else cons(head xs, ++ (tail xs, ys))
 end
