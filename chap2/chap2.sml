@@ -28,17 +28,17 @@ end
 
 structure MyStack: Stack =
 struct
-  datatype 'a Stack = Nil | CONS of 'a * 'a Stack
+  datatype 'a Stack = Nil | Cons of 'a * 'a Stack
   val empty = Nil
   fun isEmpty Nil = true
     | isEmpty _ = false
-  fun cons (x, xs) = CONS(x, xs)
+  fun cons (x, xs) = Cons(x, xs)
   fun head Nil = raise Empty
-    | head (CONS(x, xs)) = x
+    | head (Cons(x, xs)) = x
   fun tail Nil = raise Empty
-    | tail (CONS(x, xs)) = xs
+    | tail (Cons(x, xs)) = xs
   fun ++ (xs, ys) = if isEmpty xs then ys else cons(head xs, ++ (tail xs, ys))
   fun update(Nil, i, y) = raise Subscript
-    | update(CONS(x, xs), 0, y) = CONS(y, xs)
-    | update(CONS(x, xs), i, y) = update(xs, i - 1, y)
+    | update(Cons(x, xs), 0, y) = Cons(y, xs)
+    | update(Cons(x, xs), i, y) = update(xs, i - 1, y)
 end
