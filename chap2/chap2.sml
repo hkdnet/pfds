@@ -9,6 +9,7 @@ sig
   val tail : 'a Stack -> 'a Stack
   val ++ : 'a Stack * 'a Stack -> 'a Stack
   val update : 'a Stack * int * 'a -> 'a Stack
+  val suffixes : 'a Stack -> 'a Stack Stack
 end
 
 structure MyList: Stack =
@@ -24,6 +25,9 @@ struct
   fun update([], i, y) = raise Subscript
     | update(x :: xs, 0, y) = y :: xs
     | update(x :: xs, i, y) = update(xs, i - 1, y)
+
+  fun suffixes([]) = [[]]
+    | suffixes(x::xs) = cons (x::xs, suffixes xs)
 end
 
 structure MyStack: Stack =
@@ -41,4 +45,6 @@ struct
   fun update(Nil, i, y) = raise Subscript
     | update(Cons(x, xs), 0, y) = Cons(y, xs)
     | update(Cons(x, xs), i, y) = update(xs, i - 1, y)
+  fun suffixes(Nil) = Nil
+    | suffixes(Cons(x, xs)) = Cons(Cons(x, xs), suffixes xs)
 end
