@@ -48,3 +48,14 @@ struct
   fun suffixes(Nil) = Nil
     | suffixes(Cons(x, xs)) = Cons(Cons(x, xs), suffixes xs)
 end
+
+structure BalancedTree =
+struct
+  datatype Tree = E | T of Tree * int * Tree
+
+  fun member (x, E) = false
+    | member (x, s as T(lt, y, rt)) =
+      if x < y then member(x, lt)
+      else if x > y then member(x, rt)
+      else true
+end
