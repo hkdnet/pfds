@@ -49,13 +49,27 @@ struct
     | suffixes(Cons(x, xs)) = Cons(Cons(x, xs), suffixes xs)
 end
 
-structure BalancedTree =
-struct
-  datatype Tree = E | T of Tree * int * Tree
 
+signature Ordered =
+sig
+  type T
+  val eq : T * T -> bool
+  val lt : T * T -> bool
+  val le : T * T -> bool
+end
+
+functor UnbalancedTree (Element : Ordered) =
+struct
+  type Elem = Element.T
+  datatype Tree = E | T of Tree * Elem * Tree
   fun member (x, E) = false
     | member (x, s as T(lt, y, rt)) =
-      if x < y then member(x, lt)
-      else if x > y then member(x, rt)
+      if Element.lt(x, y) then member(x, lt)
+      else if Element.lt(y, x) then member(x, rt)
       else true
+  fun insert (x, E) = T(E, x, E)
+    | insert (x, s as T(a, y, b)) =
+        if Element.lt (x, y) then T(insert(x, a), y, b)
+        else if Element.lt (y, x) then T(a, y, insert(x, b))
+        else s
 end
