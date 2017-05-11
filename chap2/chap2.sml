@@ -1,3 +1,5 @@
+use "common.sml";
+
 signature Stack =
 sig
   type 'a Stack
@@ -47,15 +49,6 @@ struct
     | update(Cons(x, xs), i, y) = update(xs, i - 1, y)
   fun suffixes(Nil) = Nil
     | suffixes(Cons(x, xs)) = Cons(Cons(x, xs), suffixes xs)
-end
-
-
-signature Ordered =
-sig
-  type T
-  val eq : T * T -> bool
-  val lt : T * T -> bool
-  val le : T * T -> bool
 end
 
 functor UnbalancedTree (Element : Ordered) =
