@@ -55,14 +55,27 @@ functor UnbalancedTree (Element : Ordered) =
 struct
   type Elem = Element.T
   datatype Tree = E | T of Tree * Elem * Tree
-  fun member (x, E) = false
-    | member (x, s as T(lt, y, rt)) =
+  fun member (x, E) = (print "member is called"; false)
+    | member (x, s as T(lt, y, rt)) = (
+      print "member is called";
       if Element.lt(x, y) then member(x, lt)
       else if Element.lt(y, x) then member(x, rt)
       else true
+    )
   fun insert (x, E) = T(E, x, E)
     | insert (x, s as T(a, y, b)) =
         if Element.lt (x, y) then T(insert(x, a), y, b)
         else if Element.lt (y, x) then T(a, y, insert(x, b))
         else s
 end
+
+structure MyInt : Ordered =
+struct
+  type T = int
+
+  fun eq (a, b) = a = b
+  fun lt (a, b) = a < b
+  fun le (a, b) = eq(a, b) orelse lt (a, b)
+end
+
+structure IntUnbalancedTree = UnbalancedTree (MyInt)
