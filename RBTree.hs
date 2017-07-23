@@ -13,6 +13,20 @@ module RBTree where
     | x > y = member x b
     | otherwise = True
 
+  newInsert :: Ord a => a -> RBTree a -> RBTree a
+  newInsert x s = Node B a y b
+    where
+      ins Leaf = Node R Leaf x Leaf
+      ins ss@(Node color sa@(Node _ _ saRoot _) sy sb@(Node _ _ sbRoot _))
+        | x < sy && x < saRoot = llbalance color (ins sa) sy sb
+        | x < sy && x > saRoot = lrbalance color (ins sa) sy sb
+        | x < sy = Node color (ins sa) sy sb -- >=にしてllbalanceにまかせても速度はほぼ同じな気がする？
+        | x > sy && x < sbRoot = rlbalance color sa sy (ins sb)
+        | x > sy && x > sbRoot = rrbalance color sa sy (ins sb)
+        | x > sy = Node color sa sy (ins sb)
+        | otherwise = ss
+      Node _ a y b = ins s
+
   insert :: Ord a => a -> RBTree a -> RBTree a
   insert x s = Node B a y b
     where
@@ -59,8 +73,22 @@ module RBTree where
   lbalance B (Node R a x (Node R b y c)) z d = Node R (Node B a x b) y (Node B c z d)
   lbalance c l x r = Node c l x r
 
+  llbalance :: Color -> RBTree a -> a -> RBTree a -> RBTree a
+  llbalance B (Node R (Node R a x b) y c) z d = Node R (Node B a x b) y (Node B c z d)
+  llbalance c l x r = Node c l x r
+  lrbalance :: Color -> RBTree a -> a -> RBTree a -> RBTree a
+  lrbalance B (Node R a x (Node R b y c)) z d = Node R (Node B a x b) y (Node B c z d)
+  lrbalance c l x r = Node c l x r
+
   rbalance :: Color -> RBTree a -> a -> RBTree a -> RBTree a
   rbalance B a x (Node R (Node R b y c) z d) = Node R (Node B a x b) y (Node B c z d)
   rbalance B a x (Node R b y (Node R c z d)) = Node R (Node B a x b) y (Node B c z d)
   rbalance c l x r = Node c l x r
+
+  rlbalance :: Color -> RBTree a -> a -> RBTree a -> RBTree a
+  rlbalance B a x (Node R (Node R b y c) z d) = Node R (Node B a x b) y (Node B c z d)
+  rlbalance c l x r = Node c l x r
+  rrbalance :: Color -> RBTree a -> a -> RBTree a -> RBTree a
+  rrbalance B a x (Node R b y (Node R c z d)) = Node R (Node B a x b) y (Node B c z d)
+  rrbalance c l x r = Node c l x r
 
