@@ -1,8 +1,13 @@
 import RBTree
 
-main :: IO()
-main =
-  testRBTree
+main = do
+  let nts = [ foldl (flip newInsert) emptyRB [1..x] | x <- [1..100]]
+  print nts
+  -- let ts = [ foldl (flip insert) emptyRB [1..x] | x <- [1..100]]
+  -- print ts
+  -- let ots = [ foldl (flip oldInsert) emptyRB [1..x] | x <- [1..100]]
+  -- print ots
+
 
 testRBTree :: IO()
 testRBTree
