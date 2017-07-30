@@ -7,6 +7,10 @@ module Deque where
   data Deque a = D Int [a] Int [a] deriving (Eq, Show)
 
 
+  cons :: a -> Deque a -> Deque a
+  cons x (D 1 f 0 _) = D 1 [x] 1 f -- reverse 不要
+  cons x (D fl f rl r) = D (fl + 1) (x:f) rl r
+
   head :: Deque a -> a
   head (D 0 _ 0 _) = error "empty"
   head (D 0 _ 1 r) = GHC.List.head r
@@ -25,6 +29,10 @@ module Deque where
       nf = reverse $ drop nrl r
   tail (D lLen (_:xs) rLen r) = D (lLen - 1) xs rLen r
   tail (D _ [] _ _) = error "制約違反"
+
+  snoc :: a -> Deque a -> Deque a
+  snoc x (D 0 _ 1 r) = D 1 r 1 [x] -- reverse 不要
+  snoc x (D fl f rl r) = D fl f (rl + 1) (x:r)
 
   last :: Deque a -> a
   last (D 0 _ 0 _) = error "empty"
