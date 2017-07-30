@@ -21,8 +21,8 @@ module Deque where
     where
       nfl = rLen `div` 2
       nrl = rLen - nfl
-      nr = take nfl r
-      nf = reverse $ drop nfl r
+      nr = take nrl r
+      nf = reverse $ drop nrl r
   tail (D lLen (_:xs) rLen r) = D (lLen - 1) xs rLen r
   tail (D _ [] _ _) = error "制約違反"
 
