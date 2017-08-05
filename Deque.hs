@@ -9,7 +9,7 @@ module Deque where
 
   cons :: a -> Deque a -> Deque a
   cons x (D 1 f 0 _) = D 1 [x] 1 f -- reverse 不要
-  cons x (D fl f rl r) = D (fl + 1) (x:f) rl r
+  cons x (D fl f rl r) = check $ D (fl + 1) (x:f) rl r
 
   head :: Deque a -> a
   head (D 0 _ 0 _) = error "empty"
@@ -21,18 +21,18 @@ module Deque where
   tail (D 0 _ 0 _) = error "empty"
   tail (D 0 _ 1 _) = D 0 [] 0 []
   tail (D 0 _ _ _) = error "制約違反"
-  tail (D 1 _ rLen r) = D nfl nf nrl nr
+  tail (D 1 _ rLen r) = check $ D nfl nf nrl nr
     where
       nfl = rLen `div` 2
       nrl = rLen - nfl
       nr = take nrl r
       nf = reverse $ drop nrl r
-  tail (D lLen (_:xs) rLen r) = D (lLen - 1) xs rLen r
+  tail (D lLen (_:xs) rLen r) = check $ D (lLen - 1) xs rLen r
   tail (D _ [] _ _) = error "制約違反"
 
   snoc :: a -> Deque a -> Deque a
   snoc x (D 0 _ 1 r) = D 1 r 1 [x] -- reverse 不要
-  snoc x (D fl f rl r) = D fl f (rl + 1) (x:r)
+  snoc x (D fl f rl r) = check $ D fl f (rl + 1) (x:r)
 
   last :: Deque a -> a
   last (D 0 _ 0 _) = error "empty"
@@ -44,13 +44,13 @@ module Deque where
   init (D 0 _ 0 _) = error "empty"
   init (D 1 _ 0 _) = D 0 [] 0 []
   init (D _ _ 0 _) = error "制約違反"
-  init (D fLen f 1 _) = D nfl nf nrl nr
+  init (D fLen f 1 _) = check $ D nfl nf nrl nr
     where
       nfl = fLen `div` 2
       nrl = fLen - nfl
       nf = take nfl f
       nr = reverse $ drop nfl f
-  init (D fLen f rLen (_:xs)) = D fLen f (rLen - 1) xs
+  init (D fLen f rLen (_:xs)) = check $ D fLen f (rLen - 1) xs
   init (D _ _ _ [])  = error "制約違反"
 
   check :: Deque a -> Deque a
