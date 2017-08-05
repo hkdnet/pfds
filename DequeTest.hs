@@ -39,3 +39,6 @@ main = do
     then print "OK"
     else print "NG"
 
+  if Deque.tail unbalanced == D 8 [2, 3, 4, 5, 6, 7, 8, 9] 8 [17, 16, 15, 14, 13, 12, 11, 10]
+    then print "OK"
+    else print $ Deque.tail unbalanced
