@@ -12,8 +12,12 @@ module SplayHeap where
 
   bigger :: Ord a => a -> SplayHeap a -> SplayHeap a
   bigger _ E = E
-  bigger pivot (T a x b) =
+  bigger pivot t@(T _ x b) =
     if x <= pivot then bigger pivot b
-    else T (bigger pivot a) x b
-
-
+    else bigger' pivot t
+  bigger' :: Ord a => a -> SplayHeap a -> SplayHeap a
+  bigger' _ E = error "制約違反"
+  bigger' _ (T E x b) = T E x b
+  bigger' pivot (T (T a1 y a2) x b) =
+    if y <= pivot then T (bigger pivot a2) x b
+    else T (bigger pivot a1) y (T a2 x b)
