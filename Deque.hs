@@ -52,3 +52,13 @@ module Deque where
       nr = reverse $ drop nfl f
   init (D fLen f rLen (_:xs)) = D fLen f (rLen - 1) xs
   init (D _ _ _ [])  = error "制約違反"
+
+  check :: Deque a -> Deque a
+  check (D fl f rl r)
+    | diff > 10 = D nfl (take nfl arr) nrl (reverse $ drop nfl arr) -- 定数ならなんでもいいはず
+    | otherwise = D fl f rl r
+    where
+      diff = abs $ fl - rl
+      nfl = (fl + rl) `div` 2
+      nrl = fl + rl - nfl
+      arr = f ++ reverse r

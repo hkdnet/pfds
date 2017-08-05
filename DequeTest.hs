@@ -33,3 +33,9 @@ main = do
   if Deque.init l3r1 == D 1 [1] 2 [3, 2]
     then print "OK"
     else print "NG"
+
+  let unbalanced = D 16 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] 1 [17]
+  if Deque.check unbalanced == D 8 [1, 2, 3, 4, 5, 6, 7, 8] 9 [17, 16, 15, 14, 13, 12, 11, 10, 9]
+    then print "OK"
+    else print "NG"
+
