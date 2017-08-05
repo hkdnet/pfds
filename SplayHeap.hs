@@ -1,4 +1,6 @@
 module SplayHeap where
+  -- 左は小さいか等しい
+  -- 右は要素より大きい
   data SplayHeap a = E | T (SplayHeap a) a (SplayHeap a) deriving (Eq, Show)
 
   insert :: Ord a => a -> SplayHeap a -> SplayHeap a
