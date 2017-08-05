@@ -18,16 +18,15 @@ module SplayHeap where
     if y <= pivot then T (bigger pivot a2) x b
     else T (bigger pivot a1) y (T a2 x b)
 
-  -- smallerの非対称性がよくわからない
   smaller :: Ord a => a -> SplayHeap a -> SplayHeap a
   smaller _ E = E
   smaller pivot t@(T a x _) =
-    if x >= pivot then smaller pivot a
+    if x > pivot then smaller pivot a
     else smaller' pivot t
   smaller' :: Ord a => a -> SplayHeap a -> SplayHeap a
   smaller' _ E = error "制約違反"
   smaller' _ (T a x E) = T a x E
   smaller' pivot (T a x (T b1 y b2)) =
-    if y >= pivot then T a x (smaller pivot b1)
+    if y > pivot then T a x (smaller pivot b1)
     else T (T a x b1) y (smaller pivot b2)
 
