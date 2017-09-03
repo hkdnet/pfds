@@ -32,3 +32,7 @@ module SplayHeap where
 
   findMin (T E x _) = x
   findMin (T a x b) = findMin a
+
+  deleteMin (T E x b) = b
+  deleteMin (T (T E _ b) y c) = T b y c
+  deleteMin (T (T a x b) y c) = T (deleteMin a) x (T b y c)
