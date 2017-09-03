@@ -30,3 +30,5 @@ module SplayHeap where
     if y > pivot then T a x (smaller pivot b1)
     else T (T a x b1) y (smaller pivot b2)
 
+  findMin (T E x _) = x
+  findMin (T a x b) = findMin a
