@@ -36,3 +36,10 @@ module SplayHeap where
   deleteMin (T E x b) = b
   deleteMin (T (T E _ b) y c) = T b y c
   deleteMin (T (T a x b) y c) = T (deleteMin a) x (T b y c)
+
+  sortFromList :: Ord a => [a] -> [a]
+  sortFromList xs = xs
+    where
+      fromList [] a = a
+      fromList (x:xs) a = fromList xs (insert x a)
+      heap = fromList xs E
