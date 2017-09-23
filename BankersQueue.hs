@@ -29,3 +29,16 @@ module BankersQueue where
   tail :: Queue a -> Queue a
   tail (D _ [] _ _) = error "empty"
   tail (D fl (x:fs) rl r) = check (D (fl - 1) fs rl r)
+
+  check' :: Queue a -> Queue a
+  check' q@(D fl f rl r) =
+    if rl < 2 * fl then q
+      else (D (fl + rl) (f ++ reverse r) 0 [])
+
+  snoc' :: a -> Queue a -> Queue a
+  snoc' x (D fl f rl r) = check' $ D fl f (rl + 1) (x:r)
+
+  tail' :: Queue a -> Queue a
+  tail' (D _ [] _ _) = error "empty"
+  tail' (D fl (x:fs) rl r) = check' (D (fl - 1) fs rl r)
+
