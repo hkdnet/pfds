@@ -17,6 +17,9 @@ end
 datatype 'a StreamCell = NIL | CONS of 'a * 'a Stream
 withtype 'a Stream = 'a StreamCell susp
 
+fun listToStream [] = $(NIL)
+  | listToStream (x::xs) = $(CONS(x, listToStream xs))
+
 signature Heap =
 sig
 end

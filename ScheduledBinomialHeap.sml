@@ -1,5 +1,6 @@
 use "common.sml";
 
+
 functor ScheduledBinomialHeap(Element : Ordered): Heap =
 struct
   structure Elem = Element
@@ -12,9 +13,9 @@ struct
   fun link(t1 as Node(x1, c1), t2 as Node(x2, c2)) =
     if Elem.leq (x1, x2) then Node (x1, t2::c1)
     else Node (x2, t1::c2)
-  fun lazy insTree(t, $(NIL)) = $(CONS(One t, $(NIL)))
-         | insTree(t, $(CONS(Zero, ds))) = $(CONS(One t, ds))
-         | insTree(t, $(CONS(One t', ds))) = $(CONS(Zero, insTree(link(t, t'), ds)))
+  fun insTree(t, $(NIL)) = $(CONS(One t, $(NIL)))
+    | insTree(t, $(CONS(Zero, ds))) = $(CONS(One t, ds))
+    | insTree(t, $(CONS(One t', ds))) = $(CONS(Zero, insTree(link(t, t'), ds)))
   (* exec -> Schedule -> Schedule *)
   fun exec [] = []
     | exec ($(CONS(One t, _)) :: sched) = sched
@@ -28,20 +29,35 @@ struct
     let val ds' = insTree (Node (x, []), ds)
     in (ds', exec (exec (ds' :: sched))) end (* 償却コストが2なので2回 exec する *)
 
-  (*
-   * とりあえずコメントアウト
-  fun mrg (ts1, []) = ts1
-    | mrg ([], ts2) = ts2
-    | mrg (ts1 as t1::ts1', ts2 as t2::ts2') =
-      if      rank t1 < rank t2 then t1 :: mrg(ts1', ts2)
-      else if rank t2 < rank t1 then t2 :: mrg(ts1, ts2')
-      else    insTree(link(t1, t2), mrg(ts1', ts2'))
+  fun mrg (ds1, $(NIL)) = ds1
+    | mrg ($(NIL), ds2) = ds2
+    | mrg($(CONS(Zero, ds1)), $(CONS(d, ds2))) = $(CONS(d, mrg(ds1, ds2)))
+    | mrg($(CONS(d, ds1)), $(CONS(Zero, ds2))) = $(CONS(d, mrg(ds1, ds2)))
+    | mrg($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) =
+        $(CONS(Zero, insTree (link(t2, t2),  mrg(ds1, ds2))))
 
-  fun lazy merge ($ts1, $ts2) = $(mrg (ts1, ts2))
+  fun normalize ($(NIL)) = $(NIL)
+    | normalize (ds as $(CONS(_, ds'))) = (normalize ds'; ds)
 
-  fun lazy deleteMin($ts) =
-    let val(Node (_, x, ts1), ts2) = removeMinTree ts
-    in $(mrg (rev ts1, ts2)) end
+  fun merge ((ds1, _), (ds2, _)) =
+    let val ds = normalize (mrg (ds1, ds2))
+    in (ds, []) end
+
+  fun removeMinTree ($(NIL)) = raise Empty
+    | removeMinTree ($(CONS(One t, $(NIL)))) = (t, $(NIL))
+    | removeMinTree ($(CONS(Zero, ds))) =
+      let val (t', ds') = removeMinTree ds in (t', $(CONS(Zero, ds'))) end
+    | removeMinTree ($(CONS(One (t as Node (x, _)), ds))) =
+      case removeMinTree ds of
+        (t' as Node(x', _), ds') =>
+          if Elem.leq(x, x') then (t, $(CONS(Zero, ds)))
+          else (t', $(CONS(One t, ds')))
+  fun findMin (ds, _) =
+    let val (Node(x, _), _) = removeMinTree ds in x end
+  fun deleteMin(ds, _) =
+    let val (Node (x, c), ds') = removeMinTree ds
+        val ds'' = mrg(listToStream (map One (rev c)), ds')
+    in (normalize ds'', []) end
   fun removeMinTree [] = raise Empty
     | removeMinTree [t] = (t, [])
     | removeMinTree (t :: ts) =
@@ -49,9 +65,5 @@ struct
       in if Elem.leq(root t, root t') then (t, ts)
          else (t', t::ts')
       end
-
-  fun findMin ($ts) =
-    let val (t, _) = removeMinTree ts in root t end
-  *)
 end
 
