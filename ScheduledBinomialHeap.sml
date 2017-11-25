@@ -33,12 +33,13 @@ struct
     | mrg ($(NIL), ds2) = ds2
     | mrg ($(CONS(Zero, ds1)), $(CONS(d, ds2))) = $(CONS(d, mrg(ds1, ds2)))
     | mrg ($(CONS(d, ds1)), $(CONS(Zero, ds2))) = $(CONS(d, mrg(ds1, ds2)))
-    | mrg ($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) = $(CONS(Zero, insTree (link(t2, t2),  mrg(ds1, ds2))))
+    | mrg ($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) = $(CONS(Zero, insTree (link(t1, t2),  mrg(ds1, ds2))))
 
   (* mrg の各ケースについて展開してはやめられればよさそうだが *)
   fun mrgWithList (xs, $(NIL)) = listToStream (map One (xs))
     | mrgWithList ([], ds) = ds
-    | mrgWithList (xs, ds) = mrg (listToStream (map One (xs)), ds)
+    | mrgWithList (x::xs', $(CONS(ZERO, ds'))) = $(CONS(One x, mrgWithList(xs', ds')))
+    | mrgWithList (x::xs', $(CONS(One t, ds'))) = $(CONS(Zero, insTree (link(x, t),  mrgWithList(xs', ds'))))
 
   fun normalize ($(NIL)) = $(NIL)
     | normalize (ds as $(CONS(_, ds'))) = (normalize ds'; ds)
