@@ -36,6 +36,9 @@ struct
     | mrg($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) =
         $(CONS(Zero, insTree (link(t2, t2),  mrg(ds1, ds2))))
 
+  (* mrg の各ケースについて展開してはやめられればよさそうだが *)
+  fun mrgWithList (xs, ds) = mrg (listToStream (map One (xs)), ds)
+
   fun normalize ($(NIL)) = $(NIL)
     | normalize (ds as $(CONS(_, ds'))) = (normalize ds'; ds)
 
@@ -56,7 +59,7 @@ struct
     let val (Node(x, _), _) = removeMinTree ds in x end
   fun deleteMin(ds, _) =
     let val (Node (x, c), ds') = removeMinTree ds
-        val ds'' = mrg(listToStream (map One (rev c)), ds')
+        val ds'' = mrgWithList(rev c, ds')
     in (normalize ds'', []) end
   fun removeMinTree [] = raise Empty
     | removeMinTree [t] = (t, [])
