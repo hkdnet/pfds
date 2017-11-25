@@ -31,10 +31,9 @@ struct
 
   fun mrg (ds1, $(NIL)) = ds1
     | mrg ($(NIL), ds2) = ds2
-    | mrg($(CONS(Zero, ds1)), $(CONS(d, ds2))) = $(CONS(d, mrg(ds1, ds2)))
-    | mrg($(CONS(d, ds1)), $(CONS(Zero, ds2))) = $(CONS(d, mrg(ds1, ds2)))
-    | mrg($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) =
-        $(CONS(Zero, insTree (link(t2, t2),  mrg(ds1, ds2))))
+    | mrg ($(CONS(Zero, ds1)), $(CONS(d, ds2))) = $(CONS(d, mrg(ds1, ds2)))
+    | mrg ($(CONS(d, ds1)), $(CONS(Zero, ds2))) = $(CONS(d, mrg(ds1, ds2)))
+    | mrg ($(CONS(One t1, ds1)), $(CONS(One t2, ds2))) = $(CONS(Zero, insTree (link(t2, t2),  mrg(ds1, ds2))))
 
   (* mrg の各ケースについて展開してはやめられればよさそうだが *)
   fun mrgWithList (xs, ds) = mrg (listToStream (map One (xs)), ds)
