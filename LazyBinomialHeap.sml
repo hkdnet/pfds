@@ -7,7 +7,7 @@ struct
   type Heap = Tree list susp
 
   val empty = $ []
-  fun isEmpeyt($ ts) = null ts
+  fun isEmpty($ ts) = null ts
   fun rank (Node (r, x, c)) = r
   fun root (Node (r, x, c)) = x
   fun link(t1 as Node(r, x1, c1), t2 as Node(_, x2, c2)) =
