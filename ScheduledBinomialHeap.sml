@@ -38,8 +38,11 @@ struct
   (* mrg の各ケースについて展開してはやめられればよさそうだが *)
   fun mrgWithList (xs, $(NIL)) = listToStream (map One (xs))
     | mrgWithList ([], ds) = ds
-    | mrgWithList (x::xs', $(CONS(ZERO, ds'))) = $(CONS(One x, mrgWithList(xs', ds')))
-    | mrgWithList (x::xs', $(CONS(One t, ds'))) = $(CONS(Zero, insTree (link(x, t),  mrgWithList(xs', ds'))))
+    | mrgWithList (xs as x::xs', $(CONS(d', ds'))) =
+      let fun mrgWithList' (x::xs', Zero, ds')  = $(CONS(One x, mrgWithList(xs', ds')))
+            | mrgWithList' (x::xs', One t, ds') = $(CONS(Zero, insTree (link(x, t),  mrgWithList(xs', ds'))))
+            | mrgWithList' (_, _, _) = raise Match
+      in mrgWithList' (xs, d', ds') end
 
   fun normalize ($(NIL)) = $(NIL)
     | normalize (ds as $(CONS(_, ds'))) = (normalize ds'; ds)
