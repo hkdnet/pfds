@@ -24,6 +24,11 @@ struct
     | balance body = T body
   *)
 
+
+  fun listFromTree _ = []
+  fun treeFromList _ = E
+  fun pbalance s = treeFromList (listFromTree s)
+
   fun insert (x, s) =
     let fun ins E = T(R, E, x, E, false, 1, 1)
           | ins (s as T(color, a, y, b, f, ss, t)) =
