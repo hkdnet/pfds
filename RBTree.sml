@@ -30,4 +30,13 @@ struct
           else s
         val T(_, a, y, b, f') = ins s
     in T(B, a, y, b, f') end
+
+  fun delete (x, s) =
+    let fun del E = raise Empty
+          | del (s as T(color, a, y, b, f)) =
+          if Element.lt(x, y) then balance (color, del a, y, b, f)
+          else if Element.lt(y, x) then balance (color, a, y, del b, f)
+          else T(color, a, y, b, true)
+        val T(_, a, y, b, f) = del s
+    in T(B, a, y, b, f) end
 end
