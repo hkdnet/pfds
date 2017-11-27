@@ -23,3 +23,7 @@ fun listToStream [] = $(NIL)
 signature Heap =
 sig
 end
+
+signature Set =
+sig
+end
