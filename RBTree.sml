@@ -6,6 +6,7 @@ struct
 
   datatype Color = R | B
   datatype Tree = E | T of Color * Tree * Elem * Tree * bool * int * int
+  datatype Digit = One of Elem * Tree | Two of Tree * Elem * Tree
   type Set = Tree
 
   val empty = E
@@ -25,9 +26,19 @@ struct
   *)
 
 
-  fun listFromTree _ = []
-  fun treeFromList _ = E
-  fun pbalance s = treeFromList (listFromTree s)
+  fun toOrdlist s =
+    let fun listFromTree' (E, es) = es
+          | listFromTree' (T(_, a, _, b, true, _, _), es) = listFromTree' (a, es) @ listFromTree' (b, es)
+          | listFromTree' (T(_, a, x, b, _, _, _), es)    = listFromTree' (a, es) @ [x] @ listFromTree' (b, es)
+    in listFromTree' (s, []) end
+  (* https://github.com/rst76/pfds/blob/master/ch03/ex.3.9.hs *)
+
+  fun incr ((One a, t), []) = [One a t]
+    | incr ((One a1, t1), (One a2, t2::ps)) = Two a1 t1 a2 t2 : ps
+    | incr ((One a1, t1), (Two a2, t2, a3, t3::ps)) = One(a1, t1) : incr (One a2 (T, B, t2, a3, t3)) ps
+  fun add (ps, a) = incr (One a E) ps
+  fun fromOrdList = foldl link E . foldl add []
+  fun pbalance s = fromOrdList (toOrdlist s)
 
   fun insert (x, s) =
     let fun ins E = T(R, E, x, E, false, 1, 1)
