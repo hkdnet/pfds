@@ -5,8 +5,9 @@ struct
   type Elem = Element.T
 
   datatype Color = R | B
+  (* 色、左、根、右、根が削除済みか、自分を含んだ削除されていない要素数、自分を含んだ要素数 *)
   datatype Tree = E | T of Color * Tree * Elem * Tree * bool * int * int
-  datatype Digit = One of Elem * Tree | Two of Tree * Elem * Tree
+  datatype Digit = One of Elem * Tree | Two of Elem * Tree * Elem * Tree
   type Set = Tree
 
   val empty = E
@@ -31,13 +32,26 @@ struct
           | listFromTree' (T(_, a, _, b, true, _, _), es) = listFromTree' (a, es) @ listFromTree' (b, es)
           | listFromTree' (T(_, a, x, b, _, _, _), es)    = listFromTree' (a, es) @ [x] @ listFromTree' (b, es)
     in listFromTree' (s, []) end
+
   (* https://github.com/rst76/pfds/blob/master/ch03/ex.3.9.hs *)
 
-  fun incr ((One a, t), []) = [One a t]
-    | incr ((One a1, t1), (One a2, t2::ps)) = Two a1 t1 a2 t2 : ps
-    | incr ((One a1, t1), (Two a2, t2, a3, t3::ps)) = One(a1, t1) : incr (One a2 (T, B, t2, a3, t3)) ps
-  fun add (ps, a) = incr (One a E) ps
-  fun fromOrdList = foldl link E . foldl add []
+  fun liveCountOf E = 0
+    | liveCountOf (T(_, _, _, _, _, c, _)) = c
+
+  fun tekitou (t2, a3, t3) =
+    let val lc = liveCountOf t2 + liveCountOf t3
+    in T(B, t2, a3, t3, false, lc, lc) end
+
+  fun incr (One (a, t), []) = [One(a, t)]
+    | incr (One (a1, t1), One(a2, t2)::ps) = Two(a1, t1, a2, t2)::ps
+    | incr (One (a1, t1), Two(a2, t2, a3, t3)::ps) = One(a1, t1)::(incr (One (a2, (tekitou (t2, a3, t3))), ps))
+    | incr (_, _) = raise Match
+
+  fun add(ps, a) = incr (One(a, E), ps)
+    (*
+  fun fromOrdList = foldl (link E . (foldl (add, []))
+    *)
+  fun fromOrdList _ = E
   fun pbalance s = fromOrdList (toOrdlist s)
 
   fun insert (x, s) =
