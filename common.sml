@@ -27,3 +27,7 @@ end
 signature Set =
 sig
 end
+
+signature Queue =
+sig
+end
