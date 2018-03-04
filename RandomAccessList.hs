@@ -1,6 +1,6 @@
 module RandomAccessList where
-  data Tree a = Leaf a | Node Int (Tree a) (Tree a)
-  data Digit a = Zero | One (Tree a)
+  data Tree a = Leaf a | Node Int (Tree a) (Tree a) deriving Show
+  data Digit a = Zero | One (Tree a) deriving Show
 
   type RList a = [Digit a]
 
