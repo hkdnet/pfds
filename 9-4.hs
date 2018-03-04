@@ -9,6 +9,7 @@ inc (Two:ds) = One:inc ds
 dec :: Nat -> Nat
 dec x = x
 
+-- iton もっと簡単にできないかなあ……
 iton :: Int -> Nat
 iton 0 = []
 iton i = inc $ iton (i - 1)
