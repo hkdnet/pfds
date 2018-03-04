@@ -7,7 +7,13 @@ inc (One:ds) = Two:ds
 inc (Two:ds) = One:inc ds
 
 dec :: Nat -> Nat
-dec x = x
+dec [] = error "negative!"
+-- 初手空配列のとき以外は error にしないようにする
+dec [One] = []
+dec [Two] = [One]
+dec (One:ds) = Two:dec ds
+dec (Two:ds) = One:ds
+
 
 -- iton もっと簡単にできないかなあ……
 iton :: Int -> Nat
@@ -34,12 +40,17 @@ testDec a
 
 main :: IO ()
 main = do
-  print $ iton 1
-  print $ iton 2
-  print $ iton 3
-  print $ iton 4
-  print $ ntoi $ iton 1
-  print $ ntoi $ iton 2
-  print $ ntoi $ iton 3
-  print $ ntoi $ iton 4
+  -- print $ iton 1
+  -- print $ iton 2
+  -- print $ iton 3
+  -- print $ iton 4
+  -- print $ ntoi $ iton 1
+  -- print $ ntoi $ iton 2
+  -- print $ ntoi $ iton 3
+  -- print $ ntoi $ iton 4
+  print $ dec $ iton 5
+  print $ dec $ dec $ iton 5
+  print $ dec $ dec $ dec $ iton 5
+  print $ dec $ dec $ dec $ dec $ iton 5
+  print $ dec $ dec $ dec $ dec $ dec $ iton 5
   print $ testDec 5
