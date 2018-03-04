@@ -17,6 +17,7 @@ buildTree :: Int -> a -> Tree a
 buildTree 1 e = Leaf e
 buildTree n e = Node n (buildTree (n `div` 2) e) (buildTree (n `div` 2) e)
 
+main :: IO ()
 main = do
   print $ create 1 'a'
   -- [One (Leaf 'a')]
