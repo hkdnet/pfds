@@ -14,6 +14,9 @@ dec [Two] = [One]
 dec (One:ds) = Two:dec ds
 dec (Two:ds) = One:ds
 
+add :: Nat -> Nat -> Nat
+add a [] = a
+add a b = add (inc a) (dec b)
 
 -- iton もっと簡単にできないかなあ……
 iton :: Int -> Nat
@@ -38,6 +41,14 @@ testDec a
     expected = a - 1
     actual = ntoi $ dec $ iton a
 
+testAdd :: Int -> Int -> Bool
+testAdd a b
+  | expected == actual = True
+  | otherwise = error "fail"
+  where
+    expected = a + b
+    actual = ntoi $ add (iton a) (iton b)
+
 main :: IO ()
 main = do
   -- print $ iton 1
@@ -48,9 +59,13 @@ main = do
   -- print $ ntoi $ iton 2
   -- print $ ntoi $ iton 3
   -- print $ ntoi $ iton 4
-  print $ dec $ iton 5
-  print $ dec $ dec $ iton 5
-  print $ dec $ dec $ dec $ iton 5
-  print $ dec $ dec $ dec $ dec $ iton 5
-  print $ dec $ dec $ dec $ dec $ dec $ iton 5
+  -- print $ dec $ iton 5
+  -- print $ dec $ dec $ iton 5
+  -- print $ dec $ dec $ dec $ iton 5
+  -- print $ dec $ dec $ dec $ dec $ iton 5
+  -- print $ dec $ dec $ dec $ dec $ dec $ iton 5
   print $ testDec 5
+  print $ testAdd 1 0
+  print $ testAdd 1 1
+  print $ testAdd 1 2
+  print $ testAdd 2 2
