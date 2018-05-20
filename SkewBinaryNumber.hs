@@ -1,4 +1,4 @@
-module SkewBinaryNumberList where
+module SkewBinaryNumber where
   import Prelude hiding (lookup)
   -- List of weight ( sparse )
   type Nat = [Int]
