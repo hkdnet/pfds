@@ -47,3 +47,9 @@ module HMSkewBinaryNumberRandomList where
   tail :: Queue a -> Queue a
   tail (Q _ [] _ _ _) = error "empty"
   tail (Q lenf fs state lenr r) = check (Q (lenf-1) (SkewBinaryNumber.tail fs) (invalidate state) lenr r)
+
+  lookup :: Int -> Queue a -> a
+  lookup i (Q lenf fs state lenr rs) =
+    if i < lenf then SkewBinaryNumber.lookup i fs
+      else SkewBinaryNumber.lookup (i - lenf) rs -- ？？？
+
