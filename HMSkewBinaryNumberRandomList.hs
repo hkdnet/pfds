@@ -4,8 +4,8 @@ module HMSkewBinaryNumberRandomList where
   data RotationState a = Idle
                        | Reversing Int (RList a) (RList a) (RList a) (RList a)
                        | Appending Int (RList a) (RList a)
-                       | Done (RList a)
-  data Queue a = Q Int (RList a) (RotationState a) Int (RList a)
+                       | Done (RList a) deriving Show
+  data Queue a = Q Int (RList a) (RotationState a) Int (RList a) deriving (Show)
 
   exec :: RotationState a -> RotationState a
   exec (Reversing ok (x:f) f' (y:r) r') = Reversing (ok + 1) f (x:f') r (y:r')

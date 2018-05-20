@@ -13,7 +13,7 @@ module SkewBinaryNumber where
   -- w が 0 の場合は存在しない
 
   type RList a = [(Int, Tree a)]
-  data Tree a = Leaf a | Node a (Tree a) (Tree a)
+  data Tree a = Leaf a | Node a (Tree a) (Tree a) deriving Show
 
   cons :: a -> RList a -> RList a
   cons x ts@((w1,t1):(w2,t2):rest) = if w1 == w2 then (1+w1+w2, Node x t1 t2):rest else (1, Leaf x):ts
