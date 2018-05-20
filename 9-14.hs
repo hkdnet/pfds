@@ -1,6 +1,6 @@
 import HMSkewBinaryNumberRandomList
 
-
+main :: IO()
 main = do
   let e0 = empty :: Queue Int
   print e0
@@ -14,3 +14,4 @@ main = do
   print e3
   print $ HMSkewBinaryNumberRandomList.lookup 2 e3
   print e4
+  print $ snoc e4 5

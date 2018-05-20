@@ -51,5 +51,14 @@ module HMSkewBinaryNumberRandomList where
   lookup :: Int -> Queue a -> a
   lookup i (Q lenf fs state lenr rs) =
     if i < lenf then SkewBinaryNumber.lookup i fs
-      else SkewBinaryNumber.lookup (i - lenf) rs -- ？？？
+      else
+        if (i - lenf) < lenr then SkewBinaryNumber.lookup (lenr - (i - lenf)) rs -- リバースされてるので lenr からひいてる
+          else lookupState (i - lenf - lenr) state
 
+  lookupState :: Int -> RotationState a -> a
+  lookupState _ Idle = error "invalid state"
+  -- ここを真面目にみればいいんだと思うが
+  lookupState i (Reversing _ l1 l2 l3 l4) = SkewBinaryNumber.lookup i l1
+  lookupState i (Appending n l1 l2) =
+    if i < n then SkewBinaryNumber.lookup i l1 else SkewBinaryNumber.lookup (i-n) l2
+  lookupState i (Done l) = SkewBinaryNumber.lookup i l
