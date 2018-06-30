@@ -6,6 +6,12 @@ module BootstrapSeq where
   cons a (Zero s) = One a s
   cons a (One e s) = Zero (cons (a, e) s)
 
+  head :: Seq a -> a
+  head s = let (e, _) = uncons s in e
+  tail :: Seq a -> Seq a
+  tail s = let (_, s') = uncons s in s'
+
+
   uncons :: Seq a -> (a, Seq a)
   uncons Nil = error "empty"
   uncons (One a Nil) = (a, Nil)
