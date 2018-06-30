@@ -15,4 +15,6 @@ main = do
   print t2
   print t3
   print t4
-  print $ uncons t4
+  print $ BootstrapSeq.head t3
+  print $ BootstrapSeq.tail t3
+  print $ BootstrapSeq.tail t4
