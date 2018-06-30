@@ -15,3 +15,4 @@ main = do
   print t2
   print t3
   print t4
+  print $ uncons t4
